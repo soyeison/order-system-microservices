@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { OrderDto } from './dto/order.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { User } from './entity/user.entity';
@@ -22,8 +22,12 @@ export class OrderService {
     private readonly orderRepository: OrderRepository,
   ) {}
 
-  findById(id: number) {
-    return this.orderRepository.findById(id);
+  async findById(id: number) {
+    const order = this.orderRepository.findById(id);
+    if (!order) {
+      throw new BadRequestException(`Order with id #${id} not found`);
+    }
+    return order;
   }
 
   private createOrder(user: User) {
@@ -46,7 +50,7 @@ export class OrderService {
     const product: ProductDto = await firstValueFrom(
       this.productMicroservice.send(
         { cmd: 'remove-stock-products' },
-        { id: 1, unitsToRemove: 2 },
+        { id: orderLine.productId, unitsToRemove: orderLine.quantity },
       ),
     );
     orderLine.productName = product.name;
@@ -91,6 +95,7 @@ export class OrderService {
     const user = new User();
     user.id = userDto.id;
     user.fullName = userDto.fullName;
+    console.log('Addressess: ', userDto);
     const defaultAddress: AddressDto = userDto.addresses.find(
       (address) => address.isDefault,
     );

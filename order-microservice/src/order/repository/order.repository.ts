@@ -17,8 +17,7 @@ export class OrderRepository {
   ];
 
   findById(id: number) {
-    console.log(id);
-    return true;
+    return this.orders.find((order) => order.id === id);
   }
 
   findAll() {
@@ -26,6 +25,9 @@ export class OrderRepository {
   }
 
   save(order: Order) {
+    if (!order.id) {
+      order.id = 5;
+    }
     this.orders.push(order);
     return order;
   }

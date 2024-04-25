@@ -7,7 +7,7 @@ export class UserRepository {
       fullName: 'Yeison Villegas',
       dateOfBirth: new Date('2001/08/23'),
       lastLogin: new Date(),
-      address: [
+      addresses: [
         {
           id: 1,
           firstLine: 'First Line 1',
@@ -33,7 +33,7 @@ export class UserRepository {
       fullName: 'Jhon Doe',
       dateOfBirth: new Date('2010/05/20'),
       lastLogin: new Date(),
-      address: [],
+      addresses: [],
     },
   ];
 
